@@ -1,0 +1,9 @@
+
+{
+  "body": "{\"name\":\"Tulip\",\"qty\": \"2\",\"date\":\"2018-03-12\",\"age\":\"seed\",\"sunlight\":\"full\"}",
+  "requestContext": {
+    "identity": {
+      "cognitoIdentityId": "USER-SUB-1234"
+    }
+  }
+}

@@ -15,19 +15,33 @@ custom:
 provider:
   name: aws
   runtime: nodejs8.10
-  stage: dev
+  stage: prod
   region: us-west-2
-  # To load environment variables externally
-  # rename env.example to env.yml and uncomment
-  # the following line. Also, make sure to not
-  # commit your env.yml.
-  #
-  #environment: ${file(env.yml):${self:provider.stage}}
 
+# Allow lambda functions to access DynamoDB
+iamRoleStatements:
+  - Effect: Allow
+    Action:
+      - dynamodb: DescribeTable
+      - dynamodb: Query
+      - dynamodb: Scan
+      - dynamodb: GetItem
+      - dynamodb: PutItem
+      - dynamodb: UpdateItem
+      - dynamodb: DeleteItem
+    Resource: "arn:aws:dynamodb:us-west-2:*:*"
+
+# Define HTTP API endpoint that calls main function in create plant
+# - path: /plants
+# - method: POST request
+# - cors: enabled
+# - authorizer: authenticate using the AWS IAM role
 functions:
-  hello:
-    handler: handler.hello
+  createplant:
+    handler: createplant.main
     events:
       - http:
-          path: hello
-          method: get
+          path: plants
+          method: POST
+          cors: true
+          authorizer: aws_iam
