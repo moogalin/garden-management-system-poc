@@ -17,6 +17,9 @@ provider:
   runtime: nodejs8.10
   stage: prod
   region: us-west-2
+  environment:
+    SLS_DEBUG: true
+
 
 # Allow lambda functions to access DynamoDB
 iamRoleStatements:
@@ -31,17 +34,32 @@ iamRoleStatements:
       - dynamodb: DeleteItem
     Resource: "arn:aws:dynamodb:us-west-2:*:*"
 
-# Define HTTP API endpoint that calls main function in create plant
-# - path: /plants
-# - method: POST request
-# - cors: enabled
-# - authorizer: authenticate using the AWS IAM role
+
 functions:
-  createplant:
-    handler: createplant.main
+  # Define HTTP API endpoint that calls main function in create plant
+  # - path: /plants
+  # - method: POST request
+  # - cors: enabled
+  # - authorizer: authenticate using the AWS IAM role
+  addplant:
+    handler: addplant.main
     events:
       - http:
           path: plants
           method: POST
+          cors: true
+          authorizer: aws_iam
+
+  # Define HTTP API endpoint that calls main function in loadplant
+  # - path: /plants
+  # - method: POST request
+  # - cors: enabled
+  # - authorizer: authenticate using the AWS IAM role
+  loadplants:
+    handler: loadplants.main
+    events:
+      - http:
+          path: plants/{id}
+          method: get
           cors: true
           authorizer: aws_iam
