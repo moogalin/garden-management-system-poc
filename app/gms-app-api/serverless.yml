@@ -55,11 +55,36 @@ functions:
   # - method: POST request
   # - cors: enabled
   # - authorizer: authenticate using the AWS IAM role
-  loadplants:
-    handler: loadplants.main
+  loadplant:
+    handler: loadplant.main
     events:
       - http:
           path: plants/{id}
           method: get
+          cors: true
+          authorizer: aws_iam
+
+  # Defines an HTTP API endpoint that calls the main function in listplants.js
+  # - path: url path is /plants
+  # - method: GET request
+  listplants:
+      handler: listplants.main
+      events:
+        - http:
+            path: plants
+            method: get
+            cors: true
+            authorizer: aws_iam
+
+
+  # Defines an HTTP API endpoint that calls the main function in update.js
+  # - path: url path is /notes/{id}
+  # - method: PUT request
+  updateplant:
+    handler: updateplant.main
+    events:
+      - http:
+          path: plant/{id}
+          method: put
           cors: true
           authorizer: aws_iam

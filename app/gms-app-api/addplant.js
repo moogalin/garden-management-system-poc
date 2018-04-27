@@ -13,7 +13,7 @@ export async function main(event, context, callback) {
     TableName: "plants",
     Item: {
       userId: event.requestContext.identity.cognitoIdentityId,
-      plantID: uuid.v1(),
+      plantId: uuid.v1(),
       name: data.name,
       qty: data.qty,
       date: data.date,

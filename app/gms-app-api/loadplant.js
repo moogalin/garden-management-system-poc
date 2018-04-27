@@ -6,7 +6,8 @@ export async function main(event, context, callback) {
   const params = {
     TableName: "plants",
     Key: {
-      plantID: "5a9d4630-4698-11e8-aaa8-05c2239c5209"
+      userId: event.requestContext.identity.cognitoIdentityId,
+      plantId: event.pathParameters.plantId
     }
   };
 

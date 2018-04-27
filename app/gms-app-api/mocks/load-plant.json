@@ -1,0 +1,11 @@
+
+{
+  "pathParameters": {
+    "plantId": "c9c99340-48ed-11e8-807f-876b8b2fb3df"
+  },
+  "requestContext": {
+    "identity": {
+      "cognitoIdentityId": "USER-SUB-1234"
+    }
+  }
+}

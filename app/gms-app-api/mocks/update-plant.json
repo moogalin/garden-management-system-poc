@@ -1,0 +1,12 @@
+
+{
+  "body": "{\"name\":\"Marigold\",\"qty\": \"1\",\"date\":\"2018-03-18\",\"age\":\"seed\",\"sunlight\":\"full\"}",
+  "pathParameters": {
+    "plantId": "6f46da40-48f2-11e8-8658-31ea629e8347"
+  },
+  "requestContext": {
+    "identity": {
+      "cognitoIdentityId": "USER-SUB-1234"
+    }
+  }
+}
