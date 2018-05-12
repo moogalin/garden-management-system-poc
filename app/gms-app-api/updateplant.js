@@ -15,10 +15,16 @@ export async function main(event, context, callback) {
     },
     // 'UpdateExpression' defines the attributes to be updated
     // 'ExpressionAttributeValues' defines the value in the update expression
-    UpdateExpression: "SET content = :content, attachment = :attachment",
+    UpdateExpression: "SET age = :age, #d = :date, #n = :name, qty = :qty",
     ExpressionAttributeValues: {
-      ":attachment": data.attachment ? data.attachment : null,
-      ":content": data.content ? data.content : null
+      ":age": data.age ? data.age : null,
+      ":date": data.date ? data.date : null,
+      ":name": data.name ? data.name : null,
+      ":qty": data.qty ? data.qty : null,
+    },
+    ExpressionAttributeNames: {
+      "#d":"date",
+      "#n":"name"
     },
     ReturnValues: "ALL_NEW"
   };

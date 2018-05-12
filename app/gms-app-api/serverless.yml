@@ -77,8 +77,8 @@ functions:
             authorizer: aws_iam
 
 
-  # Defines an HTTP API endpoint that calls the main function in update.js
-  # - path: url path is /notes/{id}
+  # Defines an HTTP API endpoint that calls the main function in updateplant.js
+  # - path: url path is /plant/{id}
   # - method: PUT request
   updateplant:
     handler: updateplant.main
@@ -86,5 +86,17 @@ functions:
       - http:
           path: plant/{id}
           method: put
+          cors: true
+          authorizer: aws_iam
+
+  # Defines an HTTP API endpoint that calls the main function in deleteplant.js
+  # - path: url path is /plant/{id}
+  # - method: DELETE request
+  deleteplant:
+    handler: deleteplant.main
+    events:
+      - http:
+          path: plant/{id}
+          method: delete
           cors: true
           authorizer: aws_iam
