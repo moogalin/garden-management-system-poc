@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { Auth } from "aws-amplify";
-import { Nav, Navbar, NavItem } from "react-bootstrap";
+import { Nav, Navbar, NavItem, MenuItem, NavDropdown } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import Routes from "./Routes";
 import "./App.css";
@@ -61,7 +61,21 @@ class App extends Component {
           <Navbar.Collapse>
             <Nav pullRight>
             {this.state.isAuthenticated
-              ? <NavItem onClick={this.handleLogout}>Logout</NavItem>
+              ?
+              <Fragment>
+              <NavDropdown title="Explore" id="nav-dropdown">
+                <LinkContainer to="/plants">
+                  <MenuItem>Plant Data</MenuItem>
+                </LinkContainer>
+                <LinkContainer to="/graphdata">
+                  <MenuItem>Graph Data</MenuItem>
+                </LinkContainer>
+                <LinkContainer to="/profile">
+                  <MenuItem>User Profile</MenuItem>
+                </LinkContainer>
+              </NavDropdown>
+              <NavItem onClick={this.handleLogout}>Logout</NavItem>
+              </Fragment>
               : <Fragment>
                   <LinkContainer to="/signup">
                     <NavItem>Signup</NavItem>
