@@ -1,0 +1,17 @@
+.App {
+  margin-top: 15px;
+}
+
+/* navbar */
+/*.navbar-default {
+  background-color: #93c47d;
+  border-color: #679651;
+}
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+    color: #274f17;
+}*/
+
+.App .navbar-brand {
+  font-weight: bold;
+}
