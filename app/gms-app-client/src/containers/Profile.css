@@ -1,0 +1,18 @@
+
+@media all and (min-width: 480px) {
+
+  .Profile {
+    padding: 60px 0;
+  }
+  .Profile form {
+    margin: 0 auto;
+  }
+
+  .Profile .ProfileFormGroup{
+    padding-top: 20px;
+  }
+
+  .Profile .UserProfileSubmitButton {
+    padding-left: 15px;
+  }
+}
