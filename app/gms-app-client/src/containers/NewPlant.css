@@ -1,0 +1,17 @@
+
+.NewPlant form {
+  padding-bottom: 15px;
+}
+
+.NewPlant form textarea {
+  height: 300px;
+  font-size: 24px;
+}
+
+.NewPlant .ProfileFormGroup{
+  padding-top: 20px;
+}
+
+.NewPlant .UserProfileSubmitButton {
+  padding-left: 15px;
+}

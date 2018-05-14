@@ -100,3 +100,15 @@ functions:
           method: delete
           cors: true
           authorizer: aws_iam
+
+  # Defines an HTTP API endpoint that calls the main function in viewsunlightdata.js
+  # - path: url path is /plant/{id}
+  # - method: DELETE request
+  viewsensordata:
+    handler: viewsensordata.main
+    events:
+      - http:
+          path: sensors
+          method: get
+          cors: true
+          authorizer: aws_iam

@@ -1,9 +1,9 @@
 
 @media all and (min-width: 480px) {
 
-  .Profile {
+  /*.Profile {
     padding: 60px 0;
-  }
+  }*/
   .Profile form {
     margin: 0 auto;
   }

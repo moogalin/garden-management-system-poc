@@ -64,8 +64,14 @@ class App extends Component {
               ?
               <Fragment>
               <NavDropdown title="Explore" id="nav-dropdown">
-                <LinkContainer to="/plants">
-                  <MenuItem>Plant Data</MenuItem>
+                <LinkContainer to="/plants/new">
+                  <MenuItem>Add Plant Data</MenuItem>
+                </LinkContainer>
+                <LinkContainer to="/plants/list">
+                  <MenuItem>List Plant Data</MenuItem>
+                </LinkContainer>
+                <LinkContainer to="/sensors/light">
+                  <MenuItem>View Light Data</MenuItem>
                 </LinkContainer>
                 <LinkContainer to="/graphdata">
                   <MenuItem>Graph Data</MenuItem>
