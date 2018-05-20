@@ -8,6 +8,7 @@ import Home from "./containers/Home";
 import Signup from "./containers/Signup";
 import Login from "./containers/Login";
 import NotFound from "./containers/NotFound";
+import Chart from "./containers/sensorChart";
 import { Switch } from "react-router-dom";
 
 
@@ -20,5 +21,6 @@ export default ({ childProps }) =>
     <AppliedRoute path="/sensors/light" exact component={ListLightData} props={childProps} />
     <AppliedRoute path="/signup" exact component={Signup} props={childProps} />
     <AppliedRoute path="/login" exact component={Login} props={childProps} />
+    <AppliedRoute path="/charts" exact component={Chart} props={childProps} />
     <AppliedRoute component={NotFound} />
   </Switch>;
