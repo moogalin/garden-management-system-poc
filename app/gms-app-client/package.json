@@ -7,16 +7,19 @@
     "aws-amplify-react": "^0.1.43",
     "react": "^16.3.2",
     "react-bootstrap": "^0.32.1",
+    "react-bootstrap-table": "^4.3.1",
     "react-dom": "^16.3.2",
     "react-router-bootstrap": "^0.24.4",
     "react-router-dom": "^4.2.2",
-    "react-scripts": "1.1.4",
-    "react-table": "^6.8.2"
+    "react-scripts": "1.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
+    "predeploy": "npm run build",
+    "deploy": "aws s3 sync build/ s3://garden-management-system-client --delete",
+    "postdeploy": "aws cloudfront create-invalidation --distribution-id E1DTEUPLRFIQN5 --paths '/*' && aws cloudfront create-invalidation --distribution-id E3A6685AV7ZDGC--paths '/*'",
     "eject": "react-scripts eject"
   },
   "devDependencies": {
