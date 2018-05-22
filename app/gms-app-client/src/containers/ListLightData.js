@@ -52,7 +52,10 @@ renderLightDataList(data) {
     <div>
         <div>
           {"Total Datapoints: " + count
-            + " Viewing: 10"}
+            + " Viewing: " + (count < 10 ? count : 10)
+          }
+        <br/>
+          {"Note: Only sensor data associated to logged in user is viewable"}
         </div>
         <BootstrapTable data={data} striped hover>
           <TableHeaderColumn dataField='Sensor' isKey={true} hidden={true}>Sensor</TableHeaderColumn>

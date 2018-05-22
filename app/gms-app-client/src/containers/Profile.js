@@ -37,6 +37,7 @@ export default class Login extends Component {
     return (
       <div className="Profile">
       <h1> User Profile </h1>
+      <br/> Under Construction <br/>
       <form horizontal onSubmit={this.handleSubmit}>
         <div className="ProfileFormGroup">
           <FormGroup controlId="email" bsSize="small">

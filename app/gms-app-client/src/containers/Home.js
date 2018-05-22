@@ -9,6 +9,9 @@ export default class Home extends Component {
         <img src={image} alt={"image"}/>
         <div className="lander">
           <h1>Garden Management System</h1>
+          <p><b>Note: This website is inacessible without authenticated user account. Login or sign up now</b></p>
+          <br/>
+          <br/>
           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse mollis malesuada congue. Curabitur dictum enim ut placerat euismod. Sed eu venenatis ex, et feugiat urna. In ut blandit tellus. Praesent id eleifend est. Nunc viverra risus a sollicitudin auctor. Sed convallis dui erat. Praesent eget ligula laoreet, convallis erat nec, mattis leo. Nunc in nisi congue, commodo tortor eget, sagittis justo. Mauris mollis magna in justo mattis, eu blandit lacus suscipit. Quisque ut elementum dui. Pellentesque dignissim mi est, quis volutpat odio mollis vitae.
           </p>
           < p >
