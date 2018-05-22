@@ -1,20 +1,25 @@
-
 import * as dynamoDbLib from "./libs/dynamodb-lib";
 import { success, failure } from "./libs/response-lib";
 
 export async function main(event, context, callback) {
+  const data = JSON.parse(event.body);
+
   const params = {
-    TableName: "SensorData_E47CF9063CA4",
+    TableName: "Light_Data.dev",
+    IndexName: "MAC-sorted-by-userId-index",
     // 'KeyConditionExpression' defines the condition for the query
     // 'ExpressionAttributeValues' defines the value in the condition
-    KeyConditionExpression: "Sensor = :Sensor",
+    KeyConditionExpression: "MAC = :MAC and userId = :userId",
+    //FilterExpression: "userId = :userId",
     ExpressionAttributeValues: {
-      ":Sensor": "Light"
+      ":MAC": data.MAC,
+      ":userId": event.requestContext.identity.cognitoIdentityId
     }
   };
 
   try {
     const result = await dynamoDbLib.call("query", params);
+    console.log("RESULT:" + JSON.stringify(result));
     // Return the matching list of items in response body
     callback(null, success(result.Items));
   } catch (e) {

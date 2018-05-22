@@ -15,7 +15,7 @@ custom:
 provider:
   name: aws
   runtime: nodejs8.10
-  stage: prod
+  stage: dev
   region: us-west-2
   environment:
     SLS_DEBUG: true
@@ -55,8 +55,8 @@ functions:
   # - method: POST request
   # - cors: enabled
   # - authorizer: authenticate using the AWS IAM role
-  loadplant:
-    handler: loadplant.main
+  getplant:
+    handler: getplant.main
     events:
       - http:
           path: plants/{id}
@@ -67,8 +67,8 @@ functions:
   # Defines an HTTP API endpoint that calls the main function in listplants.js
   # - path: url path is /plants
   # - method: GET request
-  listplants:
-      handler: listplants.main
+  getplants:
+      handler: getplants.main
       events:
         - http:
             path: plants
@@ -84,7 +84,7 @@ functions:
     handler: updateplant.main
     events:
       - http:
-          path: plant/{id}
+          path: plants/{id}
           method: put
           cors: true
           authorizer: aws_iam
@@ -96,19 +96,19 @@ functions:
     handler: deleteplant.main
     events:
       - http:
-          path: plant/{id}
+          path: plants/{id}
           method: delete
           cors: true
           authorizer: aws_iam
 
   # Defines an HTTP API endpoint that calls the main function in viewsunlightdata.js
-  # - path: url path is /plant/{id}
+  # - path: url path is /sensors/{id}
   # - method: DELETE request
-  viewsensordata:
-    handler: viewsensordata.main
+  getlightdata:
+    handler: getlightdata.main
     events:
       - http:
-          path: sensors
-          method: get
+          path: sensors/light
+          method: post
           cors: true
           authorizer: aws_iam

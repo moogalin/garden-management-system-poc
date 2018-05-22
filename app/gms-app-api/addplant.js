@@ -10,7 +10,7 @@ export async function main(event, context, callback) {
   const data = JSON.parse(event.body);
 
   const params = {
-    TableName: "plants",
+    TableName: "All_Plants.dev",
     Item: {
       userId: event.requestContext.identity.cognitoIdentityId,
       plantId: uuid.v1(),
@@ -19,6 +19,7 @@ export async function main(event, context, callback) {
       date: data.date,
       age: data.age,
       sunlight: data.sunlight,
+      MAC: data.MAC,
       createdAt: Date.now()
     }
   };
