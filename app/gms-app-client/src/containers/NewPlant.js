@@ -70,7 +70,7 @@ export default class NewNote extends Component {
     return (
       <div className="NewPlant">
       <h1>Add Plant</h1>
-      <form horizontal onSubmit={this.handleSubmit}>
+      <form onSubmit={this.handleSubmit}>
         <div className="ProfileFormGroup">
           <FormGroup controlId="name" bsSize="small">
             <Col componentClass={ControlLabel} sm={3}>Plant Name</Col>

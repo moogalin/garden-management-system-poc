@@ -32,15 +32,22 @@ export default class ListLightData extends Component {
 }
 
 getLightData() {
-  return API.get("plants","sensors");
+  var data = {"MAC": "E4:7C:F9:06:3C:A4"};
+  return API.post("plants","sensors/light", {
+    body: data
+  }).catch(error => {
+    console.log(error.response)
+  });
 }
 
 renderLightDataList(data) {
+  if (data != undefined) {
   var count = data.length;
   var data = data.slice(count-10,count);
   var data2 = data.forEach( data =>
     data.Time = new Date(data.Time).toLocaleString("en-US")
   );
+}
   return (
     <div>
         <div>

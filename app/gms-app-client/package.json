@@ -21,7 +21,7 @@
     "test": "react-scripts test --env=jsdom",
     "predeploy": "npm run build",
     "deploy": "aws s3 sync build/ s3://garden-management-system-client --delete",
-    "postdeploy": "aws cloudfront create-invalidation --distribution-id E1DTEUPLRFIQN5 --paths '/*' && aws cloudfront create-invalidation --distribution-id E3A6685AV7ZDGC--paths '/*'",
+    "postdeploy": "aws cloudfront create-invalidation --distribution-id E1DTEUPLRFIQN5 --paths /* && aws cloudfront create-invalidation --distribution-id E3A6685AV7ZDGC --paths /*",
     "eject": "react-scripts eject"
   },
   "devDependencies": {
