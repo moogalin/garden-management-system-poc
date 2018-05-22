@@ -15,7 +15,7 @@ custom:
 provider:
   name: aws
   runtime: nodejs8.10
-  stage: dev
+  stage: dev #or prod
   region: us-west-2
   environment:
     SLS_DEBUG: true
