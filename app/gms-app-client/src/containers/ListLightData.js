@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import { API } from "aws-amplify";
 import { PageHeader, ListGroup, ListGroupItem } from "react-bootstrap";
+import {AreaChart} from 'react-easy-chart';
 import "./ListLightData.css";
 import './react-bootstrap-table-all.min.css';
 
@@ -40,14 +41,56 @@ getLightData() {
   });
 }
 
+renderLightGraph(data){
+//check data validity, if using
+  if (data !== undefined) {
+    var count = data.length;
+    //var data = data.slice(count-10,count);
+    var data2 = data.forEach( data =>
+      data.Time = new Date(data.Time).toLocaleString("en-US")
+    );
+  }
+//return HTML of what I want to display
+  return(
+      <AreaChart
+        // datePattern={'%H:%M'}
+        xType={'text'}
+        axes
+        yDomainRange={[0, 100]}
+        grid
+        areaColors={['orange', 'purple']}
+        interpolate={'cardinal'}
+        width={750}
+        height={300}
+        axisLabels={{x: 'Hour', y: '%'}}
+        style={{ '.label': { fill: 'black' } }}
+        data={[
+          [
+            { x: '12AM', y: 20 },
+            { x: '1AM', y: 10 },
+            { x: '2AM', y: 85 },
+            { x: '3AM', y: 45 },
+            { x: '4AM', y: 15 }
+          ], [
+            { x: '12AM', y: 10 },
+            { x: '1AM', y: 15 },
+            { x: '2AM', y: 13 },
+            { x: '3AM', y: 90 },
+            { x: '4AM', y: 10 }
+          ]
+        ]}
+      />
+    );
+}
+
 renderLightDataList(data) {
   if (data != undefined) {
-  var count = data.length;
-  var data = data.slice(count-10,count);
-  var data2 = data.forEach( data =>
-    data.Time = new Date(data.Time).toLocaleString("en-US")
-  );
-}
+    var count = data.length;
+    var data = data.slice(count-10,count);
+    var data2 = data.forEach( data =>
+      data.Time = new Date(data.Time).toLocaleString("en-US")
+    );
+  }
   return (
     <div>
         <div>
@@ -64,7 +107,7 @@ renderLightDataList(data) {
           <TableHeaderColumn dataField='Visible'>Visible</TableHeaderColumn>
           <TableHeaderColumn dataField='Full_Spectrum'>Full Spectrum</TableHeaderColumn>
         </BootstrapTable>
-      </div>
+    </div>
   );
 }
 
@@ -84,6 +127,7 @@ renderLightData() {
       <PageHeader>Your Light Sensor Data</PageHeader>
       <div>
         {this.renderLightDataList(this.state.lightdata)}
+        {this.renderLightGraph(this.state.lightdata)}
       </div>
     </div>
   );
