@@ -59,8 +59,9 @@ renderLightDataList(data) {
         </div>
         <BootstrapTable data={data} striped hover>
           <TableHeaderColumn dataField='Sensor' isKey={true} hidden={true}>Sensor</TableHeaderColumn>
-          <TableHeaderColumn dataField='IR'>IR</TableHeaderColumn>
           <TableHeaderColumn dataField='Time'>Time</TableHeaderColumn>
+          <TableHeaderColumn dataField='IR'>IR</TableHeaderColumn>
+          <TableHeaderColumn dataField='Visible'>Visible</TableHeaderColumn>
           <TableHeaderColumn dataField='Full_Spectrum'>Full Spectrum</TableHeaderColumn>
         </BootstrapTable>
       </div>
