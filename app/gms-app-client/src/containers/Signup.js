@@ -7,7 +7,7 @@ import {
   FormControl,
   ControlLabel
 } from "react-bootstrap";
-import { Auth } from "aws-amplify";
+import { API, Auth } from "aws-amplify";
 
 export default class Signup extends Component {
   constructor(props) {
@@ -46,6 +46,7 @@ export default class Signup extends Component {
 
     this.setState({ isLoading: true });
 
+    /* Create a new Cognito User */
     try {
       const newUser = await Auth.signUp({
         username: this.state.email,
@@ -57,6 +58,7 @@ export default class Signup extends Component {
     } catch (e) {
       alert(e.message);
     }
+
     this.setState({ isLoading: false });
   }
 
@@ -68,6 +70,7 @@ export default class Signup extends Component {
     try {
       await Auth.confirmSignUp(this.state.email, this.state.confirmationCode);
       await Auth.signIn(this.state.email, this.state.password);
+      await this.createProfile({ zip: Number("00500"), email: this.state.email });
 
       this.props.userHasAuthenticated(true);
       this.props.history.push("/profile");
@@ -75,6 +78,14 @@ export default class Signup extends Component {
       alert(e.message);
       this.setState({ isLoading: false });
     }
+  }
+
+  createProfile(data) {
+    return API.put("plants", "user/id", {
+      body: data
+    }).catch(error => {
+      console.log(error.response)
+    });
   }
 
   renderConfirmationForm() {

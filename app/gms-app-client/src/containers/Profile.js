@@ -31,7 +31,7 @@ export default class Login extends Component {
       this.setState({fname: [profile[0].fname]});
       this.setState({lname: [profile[0].lname]});
       this.setState({email: [profile[0].email]});
-      this.setState({zip: [profile[0].zip]});
+      this.setState({zip:   [profile[0].zip]});
       this.setState({about: [profile[0].about]});
     } catch (e) {
       alert(e);
@@ -43,7 +43,6 @@ export default class Login extends Component {
   profile() {
     return API.get("plants", "user");
   }
-
 
   validateForm() {
     return true;
@@ -98,6 +97,7 @@ export default class Login extends Component {
             <FormControl
               autoFocus
               type="string"
+              placeholder="First Name"
               value={this.state.fname}
               onChange={this.handleChange}
             />
@@ -111,6 +111,7 @@ export default class Login extends Component {
             <FormControl
               autoFocus
               type="string"
+              placeholder="Last Name"
               value={this.state.lname}
               onChange={this.handleChange}
             />
@@ -164,6 +165,7 @@ export default class Login extends Component {
                 value={this.state.about}
                 onChange={this.handleChange}
                 componentClass="textarea"
+                placeholder="Tell me about yourself"
               />
             </Col>
           </FormGroup>
