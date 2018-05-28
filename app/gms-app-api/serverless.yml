@@ -103,12 +103,36 @@ functions:
 
   # Defines an HTTP API endpoint that calls the main function in viewsunlightdata.js
   # - path: url path is /sensors/{id}
-  # - method: DELETE request
+  # - method: POST request
   getlightdata:
     handler: getlightdata.main
     events:
       - http:
           path: sensors/light
           method: post
+          cors: true
+          authorizer: aws_iam
+
+  # Defines an HTTP API endpoint that calls the main function in updateuser.js
+  # - path: url path is /user/{id}
+  # - method: PUT request
+  updateuser:
+    handler: updateuser.main
+    events:
+      - http:
+          path: user/{id}
+          method: put
+          cors: true
+          authorizer: aws_iam
+
+  # Defines an HTTP API endpoint that calls the main function in getuserjs
+  # - path: url path is /user/{id}
+  # - method: POST request
+  getuser:
+    handler: getuser.main
+    events:
+      - http:
+          path: user
+          method: get
           cors: true
           authorizer: aws_iam
