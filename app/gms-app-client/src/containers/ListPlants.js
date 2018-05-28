@@ -23,7 +23,7 @@ export default class ListPlants extends Component {
     try {
       const plants = await this.plants();
       this.setState({ plants });
-      console.log(JSON.stringify(this.state));
+      console.log("State: " +JSON.stringify(this.state));
     } catch (e) {
       alert(e);
     }
