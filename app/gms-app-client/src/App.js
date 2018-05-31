@@ -73,8 +73,14 @@ class App extends Component {
                 <LinkContainer to="/sensors/light">
                   <MenuItem>View Light Data</MenuItem>
                 </LinkContainer>
-                <LinkContainer to="/charts">
-                  <MenuItem>Graph Data</MenuItem>
+                <LinkContainer to="/sensors/moisture">
+                  <MenuItem>View Moisture Data</MenuItem>
+                </LinkContainer>
+                <LinkContainer to="/sensors/temperature">
+                  <MenuItem>View Temperature Data</MenuItem>
+                </LinkContainer>
+                <LinkContainer to="/sensors/humidity">
+                  <MenuItem>View Humidity Data</MenuItem>
                 </LinkContainer>
                 <LinkContainer to="/profile">
                   <MenuItem>User Profile</MenuItem>

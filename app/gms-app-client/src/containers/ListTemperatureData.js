@@ -4,17 +4,17 @@ import { API } from "aws-amplify";
 import { PageHeader, ListGroup, ListGroupItem } from "react-bootstrap";
 import { timeParse as parse } from 'd3-time-format';
 import {AreaChart} from 'react-easy-chart';
-import "./ListLightData.css";
+import "./ListTemperatureData.css";
 import './react-bootstrap-table-all.min.css';
 import moment from 'moment';
 
-export default class ListLightData extends Component {
+export default class ListTemperatureData extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       isLoading: true,
-      lightdata: []
+      TemperatureData: []
     };
     
     this.graphData = []
@@ -29,9 +29,9 @@ export default class ListLightData extends Component {
   }
 
   try {
-    var lightdata = await this.getLightData();
-    this.setState({ lightdata });    
-    var tempData =  lightdata
+    var TemperatureData = await this.getTemperatureData();
+    this.setState({ TemperatureData });    
+    var tempData =  TemperatureData
     
     var date_sort_asc = function (data1, data2) {
         var date1 = data1.Time, date2 = data2.Time;
@@ -50,40 +50,36 @@ export default class ListLightData extends Component {
   this.setState({ isLoading: false });
 }
 
-getLightData() {
+getTemperatureData() {
   var data = {"MAC": "E4:7C:F9:06:3C:A4"};
-  return API.post("plants","sensors/light", {
+  return API.post("plants","sensors/temperature", {
     body: data
   }).catch(error => {
     console.log(error.response)
   });  
 }
 
-renderLightGraph(data){
+renderTemperatureGraph(data){
     if(data !== undefined) {
         this.graphData = []
         var count = data.length;
         
         // const parseDate = parse('%d-%b-%y %H:%M');
         var tempData = data.slice(count-144,count);
-        var dataIR = [];
-        var dataFS = [];
-        var dataV = [];
+        var dataTC = [];
+        var dataTF = [];
         var i
         for (i = 0; i < tempData.length; i++) {
             var tempDate = tempData[i].Time.replace("T"," ").substring(0,16)
             let date = moment(tempDate, 'YYYY-MM-DD HH:mm');
             
-            var subData = { x: date.format('D-MMM-YY HH:mm'), y: tempData[i]["IR"]}
-            var subfs = { x: date.format('D-MMM-YY HH:mm'), y: tempData[i]["Full_Spectrum"] }
-            var subv = { x: date.format('D-MMM-YY HH:mm'), y: tempData[i]["Visible"] }
-            dataIR.push(subData);
-            dataFS.push(subfs);
-            dataV.push(subv)
+            var subtc = { x: date.format('D-MMM-YY HH:mm'), y: tempData[i]["Temperature_C"]}
+            var subtf = { x: date.format('D-MMM-YY HH:mm'), y: tempData[i]["Temperature_F"] }
+            dataTC.push(subtc);
+            dataTF.push(subtf);
         }
-        this.graphData.push(dataIR)
-        this.graphData.push(dataFS)
-        this.graphData.push(dataV)
+        this.graphData.push(dataTC)
+        this.graphData.push(dataTF)
         console.log(JSON.stringify(this.graphData));
     }
 
@@ -92,32 +88,27 @@ renderLightGraph(data){
   <div>
       <AreaChart
         data={this.graphData}
-        // xType={'text'}
         datePattern={'%d-%b-%y %H:%M'}
         xType={'time'}
         axes
-        yDomainRange={[0, 70000]}
+        yDomainRange={[0, 200]}
         grid
-        areaColors={['orange', 'purple', 'green']}
+        areaColors={['orange', 'purple']}
         interpolate={'cardinal'}
         width={750}
         height={320}
         margin={{top: 0, right: 0, bottom: 50, left: 65}}
-        axisLabels={{x: 'Time', y: 'LUX'}}
-        // style={'.label'}
+        axisLabels={{x: 'Time', y: 'deg'}}
       />
         <legend></legend>
         <table class = "legendFormat">
             <th class = "Legend">Legend</th>
             <tr>
-                <td class="Legend">Infrared = </td>
-                <td><span class="IRdot"></span></td>
+                <td class="Legend">Celcius = </td>
+                <td><span class="tcdot"></span></td>
                 <td class="Space"></td>
-                <td class="Legend">Full Spectrum = </td>
-                <td><span class="FSdot"></span></td>
-                <td class="Space"></td>
-                <td class="Legend">Visible = </td>
-                <td><span class="Vdot"></span></td>
+                <td class="Legend">Fahrenheit = </td>
+                <td><span class="tfdot"></span></td>
                 <td class="Space"></td>
             </tr>
         </table>
@@ -126,7 +117,7 @@ renderLightGraph(data){
     );
 }
 
-renderLightDataList(data) {
+renderTemperatureDataList(data) {
   if (data !== undefined) {
      var count = data.length;
     this.chartData = []
@@ -139,9 +130,8 @@ renderLightDataList(data) {
         this.chartData.push({
              Sensor: tempData[i].Sensor, 
              userID: tempData[i].userID, 
-             Visible: tempData[i].Visible, 
-             IR: tempData[i].IR, 
-             Full_Spectrum: tempData[i].Full_Spectrum, 
+             Temperature_F: tempData[i].Temperature_f, 
+             Temperature_C: tempData[i].Temperature_c, 
              MAC: tempData[i].MAC, 
              Time: subtime});
       }
@@ -158,9 +148,8 @@ renderLightDataList(data) {
         <BootstrapTable data={this.chartData} striped hover>
           <TableHeaderColumn dataField='Sensor' isKey={true} hidden={true}>Sensor</TableHeaderColumn>
           <TableHeaderColumn dataField='Time'>Time</TableHeaderColumn>
-          <TableHeaderColumn dataField='IR'>IR</TableHeaderColumn>
-          <TableHeaderColumn dataField='Visible'>Visible</TableHeaderColumn>
-          <TableHeaderColumn dataField='Full_Spectrum'>Full Spectrum</TableHeaderColumn>
+          <TableHeaderColumn dataField='Temperature_C'>Temperature_C</TableHeaderColumn>
+          <TableHeaderColumn dataField='Temperature_F'>Temperature_F</TableHeaderColumn>
         </BootstrapTable>
     </div>
   );
@@ -176,13 +165,13 @@ renderLander() {
   );
 }
 
-renderLightData() {
+renderTemperatureData() {
   return (
-    <div className="LightData">
-      <PageHeader>Your Light Sensor Data</PageHeader>
+    <div className="TemperatureData">
+      <PageHeader>Your Temperature Sensor Data</PageHeader>
       <div>
-        {this.renderLightGraph(this.state.lightdata)}
-        {this.renderLightDataList(this.state.lightdata)}
+        {this.renderTemperatureGraph(this.state.TemperatureData)}
+        {this.renderTemperatureDataList(this.state.TemperatureData)}
       </div>
     </div>
   );
@@ -190,8 +179,8 @@ renderLightData() {
 
   render() {
     return (
-      <div className="ListLightData">
-        {this.props.isAuthenticated ? this.renderLightData() : this.renderLander()}
+      <div className="ListTemperatureData">
+        {this.props.isAuthenticated ? this.renderTemperatureData() : this.renderLander()}
       </div>
     );
   }

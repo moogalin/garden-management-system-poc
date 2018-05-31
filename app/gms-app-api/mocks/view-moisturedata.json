@@ -1,0 +1,8 @@
+{
+  "body": "{\"MAC\":\"E4:7C:F9:06:3C:A4\"}",
+  "requestContext": {
+    "identity": {
+      "cognitoIdentityId": "fake_userId_from_test_script"
+    }
+  }
+}
