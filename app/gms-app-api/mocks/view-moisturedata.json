@@ -2,7 +2,7 @@
   "body": "{\"MAC\":\"E4:7C:F9:06:3C:A4\"}",
   "requestContext": {
     "identity": {
-      "cognitoIdentityId": "fake_userId_from_test_script"
+      "cognitoIdentityId": "us-west-2:ac942cc3-ad43-4c6a-87e8-e1a7e23bda24"
     }
   }
 }
