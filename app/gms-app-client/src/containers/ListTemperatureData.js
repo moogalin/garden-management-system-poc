@@ -16,13 +16,13 @@ export default class ListTemperatureData extends Component {
       isLoading: true,
       TemperatureData: []
     };
-    
+
     this.graphData = []
     this.chartData = []
   }
 
-  
-  
+
+
   async componentDidMount() {
   if (!this.props.isAuthenticated) {
     return;
@@ -30,19 +30,19 @@ export default class ListTemperatureData extends Component {
 
   try {
     var TemperatureData = await this.getTemperatureData();
-    this.setState({ TemperatureData });    
+    this.setState({ TemperatureData });
     var tempData =  TemperatureData
-    
+
     var date_sort_asc = function (data1, data2) {
         var date1 = data1.Time, date2 = data2.Time;
-    
+
         if (date1 > date2) return 1;
         if (date1 < date2) return -1;
         return 0;
     };
-    
+
     tempData.sort(date_sort_asc);
-    
+
   } catch (e) {
     alert(e);
   }
@@ -56,14 +56,14 @@ getTemperatureData() {
     body: data
   }).catch(error => {
     console.log(error.response)
-  });  
+  });
 }
 
 renderTemperatureGraph(data){
     if(data !== undefined) {
         this.graphData = []
         var count = data.length;
-        
+
         // const parseDate = parse('%d-%b-%y %H:%M');
         var tempData = data.slice(count-144,count);
         var dataTC = [];
@@ -72,9 +72,9 @@ renderTemperatureGraph(data){
         for (i = 0; i < tempData.length; i++) {
             var tempDate = tempData[i].Time.replace("T"," ").substring(0,16)
             let date = moment(tempDate, 'YYYY-MM-DD HH:mm');
-            
-            var subtc = { x: date.format('D-MMM-YY HH:mm'), y: tempData[i]["Temperature_C"]}
-            var subtf = { x: date.format('D-MMM-YY HH:mm'), y: tempData[i]["Temperature_F"] }
+
+            var subtc = { x: date.format('D-MMM-YY HH:mm'), y: tempData[i]["Celsius"]}
+            var subtf = { x: date.format('D-MMM-YY HH:mm'), y: tempData[i]["Fahrenheit"] }
             dataTC.push(subtc);
             dataTF.push(subtf);
         }
@@ -104,12 +104,12 @@ renderTemperatureGraph(data){
         <table class = "legendFormat">
             <th class = "Legend">Legend</th>
             <tr>
-                <td class="Legend">Celcius = </td>
-                <td><span class="tcdot"></span></td>
-                <td class="Space"></td>
-                <td class="Legend">Fahrenheit = </td>
-                <td><span class="tfdot"></span></td>
-                <td class="Space"></td>
+                <td class ="Legend">Celcius = </td>
+                <td><span class ="tcdot"></span></td>
+                <td class ="Space"></td>
+                <td class ="Legend">Fahrenheit = </td>
+                <td><span class ="tfdot"></span></td>
+                <td class ="Space"></td>
             </tr>
         </table>
         <br />
@@ -123,16 +123,16 @@ renderTemperatureDataList(data) {
     this.chartData = []
     var tempData = data.slice(count-144,count);
     var i
-      //console.log(JSON.stringify(tempData));
+      console.log(JSON.stringify(tempData));
      for (i = 0; i < tempData.length; i++) {
          var subtime = new Date(tempData[i].Time).toLocaleString("en-US")
-         
+
         this.chartData.push({
-             Sensor: tempData[i].Sensor, 
-             userID: tempData[i].userID, 
-             Temperature_F: tempData[i].Temperature_f, 
-             Temperature_C: tempData[i].Temperature_c, 
-             MAC: tempData[i].MAC, 
+             Sensor: tempData[i].Sensor,
+             userID: tempData[i].userID,
+             Temperature_F: tempData[i].Fahrenheit,
+             Temperature_C: tempData[i].Celsius,
+             MAC: tempData[i].MAC,
              Time: subtime});
       }
   }
@@ -148,8 +148,8 @@ renderTemperatureDataList(data) {
         <BootstrapTable data={this.chartData} striped hover>
           <TableHeaderColumn dataField='Sensor' isKey={true} hidden={true}>Sensor</TableHeaderColumn>
           <TableHeaderColumn dataField='Time'>Time</TableHeaderColumn>
-          <TableHeaderColumn dataField='Temperature_C'>Temperature_C</TableHeaderColumn>
-          <TableHeaderColumn dataField='Temperature_F'>Temperature_F</TableHeaderColumn>
+          <TableHeaderColumn dataField='Temperature_C'>Temperature (Celsius)</TableHeaderColumn>
+          <TableHeaderColumn dataField='Temperature_F'>Temperature (Fahrenheit)</TableHeaderColumn>
         </BootstrapTable>
     </div>
   );
