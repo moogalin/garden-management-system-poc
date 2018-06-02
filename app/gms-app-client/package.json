@@ -5,7 +5,7 @@
   "dependencies": {
     "aws-amplify": "^0.3.3",
     "aws-amplify-react": "^0.1.43",
-    "moment": "^2.22.1",
+    "moment": "^2.22.2",
     "react": "^16.3.2",
     "react-bootstrap": "^0.32.1",
     "react-bootstrap-table": "^4.3.1",
