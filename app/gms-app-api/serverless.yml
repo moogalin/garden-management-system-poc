@@ -101,8 +101,8 @@ functions:
           cors: true
           authorizer: aws_iam
 
-  # Defines an HTTP API endpoint that calls the main function in viewsunlightdata.js
-  # - path: url path is /sensors/{id}
+  # Defines an HTTP API endpoint that calls the main function in getlightdata.js
+  # - path: url path is /sensors/light
   # - method: POST request
   getlightdata:
     handler: getlightdata.main
@@ -112,6 +112,43 @@ functions:
           method: post
           cors: true
           authorizer: aws_iam
+
+  # Defines an HTTP API endpoint that calls the main function in viewsunlightdata.js
+  # - path: url path is /sensors/moisture
+  # - method: POST request
+  getmoisturedata:
+    handler: getmoisturedata.main
+    events:
+      - http:
+          path: sensors/moisture
+          method: post
+          cors: true
+          authorizer: aws_iam
+
+  # Defines an HTTP API endpoint that calls the main function in gettemperaturedata.js
+  # - path: url path is /sensors/moisture
+  # - method: POST request
+  gettemperaturedata:
+    handler: gettemperaturedata.main
+    events:
+      - http:
+          path: sensors/temperature
+          method: post
+          cors: true
+          authorizer: aws_iam
+
+  # Defines an HTTP API endpoint that calls the main function in gethumiditydata.js
+  # - path: url path is /sensors/moisture
+  # - method: POST request
+  gethumiditydata:
+    handler: gethumiditydata.main
+    events:
+      - http:
+          path: sensors/humidity
+          method: post
+          cors: true
+          authorizer: aws_iam
+
 
   # Defines an HTTP API endpoint that calls the main function in updateuser.js
   # - path: url path is /user/{id}
