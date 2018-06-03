@@ -76,7 +76,6 @@ functions:
             cors: true
             authorizer: aws_iam
 
-
   # Defines an HTTP API endpoint that calls the main function in updateplant.js
   # - path: url path is /plant/{id}
   # - method: PUT request
@@ -96,13 +95,13 @@ functions:
     handler: deleteplant.main
     events:
       - http:
-          path: plants/{id}
+          path: plants/delete
           method: delete
           cors: true
           authorizer: aws_iam
 
-  # Defines an HTTP API endpoint that calls the main function in viewsunlightdata.js
-  # - path: url path is /sensors/{id}
+  # Defines an HTTP API endpoint that calls the main function in getlightdata.js
+  # - path: url path is /sensors/light
   # - method: POST request
   getlightdata:
     handler: getlightdata.main
@@ -112,6 +111,43 @@ functions:
           method: post
           cors: true
           authorizer: aws_iam
+
+  # Defines an HTTP API endpoint that calls the main function in viewsunlightdata.js
+  # - path: url path is /sensors/moisture
+  # - method: POST request
+  getmoisturedata:
+    handler: getmoisturedata.main
+    events:
+      - http:
+          path: sensors/moisture
+          method: post
+          cors: true
+          authorizer: aws_iam
+
+  # Defines an HTTP API endpoint that calls the main function in gettemperaturedata.js
+  # - path: url path is /sensors/moisture
+  # - method: POST request
+  gettemperaturedata:
+    handler: gettemperaturedata.main
+    events:
+      - http:
+          path: sensors/temperature
+          method: post
+          cors: true
+          authorizer: aws_iam
+
+  # Defines an HTTP API endpoint that calls the main function in gethumiditydata.js
+  # - path: url path is /sensors/moisture
+  # - method: POST request
+  gethumiditydata:
+    handler: gethumiditydata.main
+    events:
+      - http:
+          path: sensors/humidity
+          method: post
+          cors: true
+          authorizer: aws_iam
+
 
   # Defines an HTTP API endpoint that calls the main function in updateuser.js
   # - path: url path is /user/{id}
@@ -136,3 +172,27 @@ functions:
           method: get
           cors: true
           authorizer: aws_iam
+
+  # Defines an HTTP API endpoint that calls the main function in getclaimedpis.js
+  # - path: url path is /pis/claimed
+  # - method: GET request
+  getclaimedpis:
+      handler: getclaimedpis.main
+      events:
+        - http:
+            path: pis/claimed
+            method: get
+            cors: true
+            authorizer: aws_iam
+
+  # Defines an HTTP API endpoint that calls the main function in getclaimedpis.js
+  # - path: url path is /pis/unclaimed
+  # - method: GET request
+  getunclaimedpis:
+      handler: getunclaimedpis.main
+      events:
+        - http:
+            path: pis/unclaimed
+            method: get
+            cors: true
+            authorizer: aws_iam
