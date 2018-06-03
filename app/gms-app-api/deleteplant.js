@@ -2,6 +2,9 @@ import * as dynamoDbLib from "./libs/dynamodb-lib";
 import { success, failure } from "./libs/response-lib";
 
 export async function main(event, context, callback) {
+
+  const data = JSON.parse(event.body);
+
   const params = {
     TableName: "All_Plants.dev",
     // 'Key' defines the partition key and sort key of the item to be removed
@@ -9,12 +12,13 @@ export async function main(event, context, callback) {
     // - 'noteId': path parameter
     Key: {
       userId: event.requestContext.identity.cognitoIdentityId,
-      plantId: event.pathParameters.plantId
+      plantId: data.plantId
     }
   };
 
   try {
     const result = await dynamoDbLib.call("delete", params);
+    console.log(params);
     callback(null, success({ status: true }));
   } catch (e) {
     console.log(e);

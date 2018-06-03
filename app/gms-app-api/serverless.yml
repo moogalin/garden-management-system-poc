@@ -95,7 +95,7 @@ functions:
     handler: deleteplant.main
     events:
       - http:
-          path: plants/{id}
+          path: plants/delete
           method: delete
           cors: true
           authorizer: aws_iam
