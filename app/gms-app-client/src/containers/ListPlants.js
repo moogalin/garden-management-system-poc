@@ -85,6 +85,7 @@ export default class ListPlants extends Component {
       <TableHeaderColumn dataField='date'>Date Planted</TableHeaderColumn>
       <TableHeaderColumn dataField='sunlight'>Sunlight Required</TableHeaderColumn>
       <TableHeaderColumn dataField='age'>Age</TableHeaderColumn>
+      <TableHeaderColumn dataField='MAC'>Associated Sensor</TableHeaderColumn>
 
     </BootstrapTable>
     </div>
