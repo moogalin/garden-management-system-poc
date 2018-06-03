@@ -76,7 +76,6 @@ functions:
             cors: true
             authorizer: aws_iam
 
-
   # Defines an HTTP API endpoint that calls the main function in updateplant.js
   # - path: url path is /plant/{id}
   # - method: PUT request
@@ -173,3 +172,27 @@ functions:
           method: get
           cors: true
           authorizer: aws_iam
+
+  # Defines an HTTP API endpoint that calls the main function in getclaimedpis.js
+  # - path: url path is /pis/claimed
+  # - method: GET request
+  getclaimedpis:
+      handler: getclaimedpis.main
+      events:
+        - http:
+            path: pis/claimed
+            method: get
+            cors: true
+            authorizer: aws_iam
+
+  # Defines an HTTP API endpoint that calls the main function in getclaimedpis.js
+  # - path: url path is /pis/unclaimed
+  # - method: GET request
+  getunclaimedpis:
+      handler: getunclaimedpis.main
+      events:
+        - http:
+            path: pis/unclaimed
+            method: get
+            cors: true
+            authorizer: aws_iam
