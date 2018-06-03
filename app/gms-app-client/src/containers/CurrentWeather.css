@@ -1,0 +1,23 @@
+.Home img {
+  padding: 50px 0;
+  width: 540px;
+  height: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.Home .lander {
+  text-align: center;
+}
+
+.Home .lander h1 {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+}
+
+.Home .lander p {
+  color: #999;
+  text-align: justify;
+
+}

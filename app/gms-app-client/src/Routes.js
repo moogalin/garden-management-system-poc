@@ -9,6 +9,8 @@ import Signup from "./containers/Signup";
 import Login from "./containers/Login";
 import NotFound from "./containers/NotFound";
 import Chart from "./containers/sensorChart";
+import CurrentWeather from "./containers/CurrentWeather"
+import Forecast from "./containers/Forecast"
 import { Switch } from "react-router-dom";
 
 
@@ -22,5 +24,7 @@ export default ({ childProps }) =>
     <AppliedRoute path="/signup" exact component={Signup} props={childProps} />
     <AppliedRoute path="/login" exact component={Login} props={childProps} />
     <AppliedRoute path="/charts" exact component={Chart} props={childProps} />
+    <AppliedRoute path="/currentweather" exact component={CurrentWeather} props={childProps} />
+    <AppliedRoute path="/forecast" exact component={Forecast} props={childProps} />
     <AppliedRoute component={NotFound} />
   </Switch>;

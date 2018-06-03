@@ -76,6 +76,9 @@ class App extends Component {
                 <LinkContainer to="/charts">
                   <MenuItem>Graph Data</MenuItem>
                 </LinkContainer>
+                <LinkContainer to="/currentweather">
+                  <MenuItem>Current Weather</MenuItem>
+                </LinkContainer>
                 <LinkContainer to="/profile">
                   <MenuItem>User Profile</MenuItem>
                 </LinkContainer>
