@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { API, Auth } from "aws-amplify";
 import { FormGroup, FormControl, ControlLabel, Col } from "react-bootstrap";
 import "./Profile.css";
+import { dropdown, dropdownDisabled} from "../utils/Dropdown";
 
 export default class Login extends Component {
   constructor(props) {
@@ -14,7 +15,9 @@ export default class Login extends Component {
       lname: "",
       email: "",
       zip: "",
-      raspberry:"",
+      unclaimed_macs:[],
+      claimed_macs:[],
+      claim_mac:"",
       about: "",
       profile:[]
     };
@@ -28,11 +31,29 @@ export default class Login extends Component {
     try {
       const profile = await this.profile();
       this.setState({ profile });
+      console.log(JSON.stringify(profile));
+      console.log(profile[0].fname);
       this.setState({fname: [profile[0].fname]});
       this.setState({lname: [profile[0].lname]});
       this.setState({email: [profile[0].email]});
       this.setState({zip:   [profile[0].zip]});
       this.setState({about: [profile[0].about]});
+    } catch (e) {
+      alert(e);
+    }
+
+    try {
+      const claimed_macs= await this.getClaimedMACs();
+      this.setState({ claimed_macs });
+      console.log(JSON.stringify(claimed_macs));
+    } catch (e) {
+      alert(e);
+    }
+
+    try {
+      const unclaimed_macs = await this.getUnClaimedMACs();
+      this.setState({ unclaimed_macs });
+      console.log(JSON.stringify(unclaimed_macs));
     } catch (e) {
       alert(e);
     }
@@ -43,6 +64,16 @@ export default class Login extends Component {
   profile() {
     return API.get("plants", "user");
   }
+
+  getClaimedMACs() {
+    return API.get("plants", "pis/claimed");
+  }
+
+  getUnClaimedMACs() {
+    return API.get("plants", "pis/unclaimed");
+  }
+
+
 
   validateForm() {
     return true;
@@ -146,14 +177,32 @@ export default class Login extends Component {
           </FormGroup>
         </div>
         <div className="ProfileFormGroup">
-          <FormGroup controlId="raspberry" bsSize="small">
-          <Col componentClass={ControlLabel} sm={3}>Raspberry Pi MAC </Col>
+          <FormGroup controlId="claim_mac" bsSize="small">
+          <Col componentClass={ControlLabel} sm={3}>Claim a sensor</Col>
             <Col sm={9}>
-              <FormControl
-                value={this.state.raspberry}
-                onChange={this.handleChange}
-                type="string"
-              />
+                <FormControl
+                  componentClass="select"
+                  placeholder="select"
+                  value={this.state.claim_mac}
+                  onChange={this.handleChange}
+                >
+                <option value="blank"></option>
+                { dropdown(this.state.unclaimed_macs, "MAC") }
+                </FormControl>
+            </Col>
+          </FormGroup>
+        </div>
+        <div className="ProfileFormGroup">
+          <FormGroup controlId="claim_mac" bsSize="small">
+          <Col componentClass={ControlLabel} sm={3}>Claimed sensors (read only)</Col>
+            <Col sm={9}>
+                <FormControl
+                  componentClass="select"
+                  placeholder="select"
+                >
+                <option value="blank" selected></option>
+                { dropdownDisabled(this.state.claimed_macs, "MAC") }
+                </FormControl>
             </Col>
           </FormGroup>
         </div>
