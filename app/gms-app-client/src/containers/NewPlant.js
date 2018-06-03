@@ -192,7 +192,7 @@ export default class NewNote extends Component {
         </div>
         <div className="ProfileFormGroup">
           <FormGroup controlId="mac_assigned" bsSize="small">
-          <Col componentClass={ControlLabel} sm={3}>Associate A Sensor (Pi MAC address)</Col>
+          <Col componentClass={ControlLabel} sm={3}>Associate Claimed Sensor</Col>
             <Col sm={9}>
                 <FormControl
                   componentClass="select"
