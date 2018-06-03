@@ -70,7 +70,7 @@ export default class NewNote extends Component {
         MAC: this.state.mac_assigned
       });
       this.setState({ isLoading: false });
-      alert("Sucess! Plant added");
+      this.props.history.push("/plants/list");
     } catch (e) {
       console.log(e);
       alert(e);
