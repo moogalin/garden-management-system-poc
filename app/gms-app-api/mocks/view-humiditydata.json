@@ -1,5 +1,5 @@
 {
-  "body": "{\"MAC\":\"E4:7C:F9:06:3C:A4\"}",
+  "body": "{\"MAC\":\"E4:7C:F9:06:3C:A4\",\"Time\":\"2018-06-02\"}",
   "requestContext": {
     "identity": {
       "cognitoIdentityId": "us-west-2:b8b6950b-495a-4ca6-805f-447f9494e70b"
