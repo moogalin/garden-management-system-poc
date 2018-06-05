@@ -6,10 +6,12 @@ export async function main(event, context, callback) {
 
   const params = {
     TableName: "Humidity_Data.dev",
-    IndexName: "MAC-sorted-by-userId-index",
+    //IndexName: "MAC-sorted-by-userId-index",
     // 'KeyConditionExpression' defines the condition for the query
     // 'ExpressionAttributeValues' defines the value in the condition
-    KeyConditionExpression: "MAC = :MAC and userId = :userId",
+    KeyConditionExpression: "MAC = :MAC",
+    FilterExpression: "userId = :userId",
+    ScanIndexForward: false,
     //FilterExpression: "userId = :userId",
     ExpressionAttributeValues: {
       ":MAC": data.MAC,
