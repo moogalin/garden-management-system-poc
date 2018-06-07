@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import { API } from "aws-amplify";
-import { PageHeader, ListGroup, ListGroupItem } from "react-bootstrap";
+import { FormGroup, FormControl, ControlLabel, Col,
+  PageHeader, ListGroup, ListGroupItem } from "react-bootstrap";
 import { timeParse as parse } from 'd3-time-format';
 import {AreaChart} from 'react-easy-chart';
 import "./ListHumidityData.css";
@@ -14,15 +15,16 @@ export default class ListHumidityData extends Component {
 
     this.state = {
       isLoading: true,
+      time: "2018",
       HumidityData: []
     };
-    
+
     this.graphData = []
     this.chartData = []
   }
 
-  
-  
+
+
   async componentDidMount() {
   if (!this.props.isAuthenticated) {
     return;
@@ -30,19 +32,19 @@ export default class ListHumidityData extends Component {
 
   try {
     var HumidityData = await this.getHumidityData();
-    this.setState({ HumidityData });    
+    this.setState({ HumidityData });
     var tempData =  HumidityData
-    
+
     var date_sort_asc = function (data1, data2) {
         var date1 = data1.Time, date2 = data2.Time;
-    
+
         if (date1 > date2) return 1;
         if (date1 < date2) return -1;
         return 0;
     };
-    
+
     tempData.sort(date_sort_asc);
-    
+
   } catch (e) {
     alert(e);
   }
@@ -50,20 +52,59 @@ export default class ListHumidityData extends Component {
   this.setState({ isLoading: false });
 }
 
+handleChange = async event => {
+
+  console.log("id: " + event.target.id);
+  console.log("value: " + event.target.value);
+  this.setState({
+    [event.target.id]: event.target.value}, this.updateHumidityData
+  )
+};
+
+
+async updateHumidityData() {
+
+  console.log("HELLO");
+
+  try {
+    var HumidityData = await this.getHumidityData();
+    //console.log("Humidity data: " + JSON.stringify(HumidityData));
+    this.setState({ HumidityData });
+    var tempData =  HumidityData;
+
+    var date_sort_asc = function (data1, data2) {
+        var date1 = data1.Time, date2 = data2.Time;
+
+        if (date1 > date2) return 1;
+        if (date1 < date2) return -1;
+        return 0;
+    };
+
+    tempData.sort(date_sort_asc);
+
+  } catch (e) {
+    alert(e);
+  }
+
+  this.renderHumidityGraph(HumidityData);
+}
+
 getHumidityData() {
-  var data = {"MAC": "E4:7C:F9:06:3C:A4"};
+  console.log("Gettings Humidity data");
+  console.log("Time: " + this.state.time);
+  var data = {"MAC": "E4:7C:F9:06:3C:A4", "Time":this.state.time};
   return API.post("plants","sensors/humidity", {
     body: data
   }).catch(error => {
     console.log(error.response)
-  });  
+  });
 }
 
 renderHumidityGraph(data){
     if(data !== undefined) {
         this.graphData = []
         var count = data.length;
-        
+
         // const parseDate = parse('%d-%b-%y %H:%M');
         var tempData = data.slice(count-144,count);
         var dataH = [];
@@ -71,12 +112,12 @@ renderHumidityGraph(data){
         for (i = 0; i < tempData.length; i++) {
             var tempDate = tempData[i].Time.replace("T"," ").substring(0,16)
             let date = moment(tempDate, 'YYYY-MM-DD HH:mm');
-            
+
             var subh = { x: date.format('D-MMM-YY HH:mm'), y: tempData[i]["Humidity"] }
             dataH.push(subh)
         }
         this.graphData.push(dataH)
-        console.log(JSON.stringify(this.graphData));
+        //console.log(JSON.stringify(this.graphData));
     }
 
 //return HTML of what I want to display
@@ -110,6 +151,24 @@ renderHumidityGraph(data){
     );
 }
 
+renderHistoricalSelect() {
+
+  return (
+    <div>
+    <FormGroup controlId="time" bsSize="small">
+      <Col componentClass={ControlLabel} sm={3}>Historical View - Select Date</Col>
+        <Col sm={9}>
+          <FormControl
+            value={this.state.date}
+            onChange={this.handleChange}
+            type="Date"
+          />
+        </Col>
+      </FormGroup>
+    </div>
+  );
+}
+
 renderHumidityDataList(data) {
   if (data !== undefined) {
      var count = data.length;
@@ -119,24 +178,25 @@ renderHumidityDataList(data) {
       //console.log(JSON.stringify(tempData));
      for (i = 0; i < tempData.length; i++) {
          var subtime = new Date(tempData[i].Time).toLocaleString("en-US")
-         
+
         this.chartData.push({
-             Sensor: tempData[i].Sensor, 
-             userID: tempData[i].userID, 
-             Humidity: tempData[i].Humidity, 
-             MAC: tempData[i].MAC, 
+             Sensor: tempData[i].Sensor,
+             userID: tempData[i].userID,
+             Humidity: tempData[i].Humidity,
+             MAC: tempData[i].MAC,
              Time: subtime});
       }
   }
   return (
     <div>
-        <div>
-          {"Total Datapoints: " + count
-            + " Viewing: " + (count < 144 ? count : 144)
-          }
-        <br/>
-          {"Note: Only sensor data associated to logged in user is viewable"}
-        </div>
+    <div>
+      <b>Total Datapoints: </b>
+      { count }
+      <b> Viewing: </b>
+      {count < 144 ? count : 144}
+    <br/>
+      <b>Note: </b>{"Only sensor data associated to logged in user is viewable"}
+    </div>
         <BootstrapTable data={this.chartData} striped hover>
           <TableHeaderColumn dataField='Sensor' isKey={true} hidden={true}>Sensor</TableHeaderColumn>
           <TableHeaderColumn dataField='Time'>Time</TableHeaderColumn>
@@ -162,6 +222,7 @@ renderHumidityData() {
       <PageHeader>Your Humidity Sensor Data</PageHeader>
       <div>
         {this.renderHumidityGraph(this.state.HumidityData)}
+        {this.renderHistoricalSelect()}
         {this.renderHumidityDataList(this.state.HumidityData)}
       </div>
     </div>

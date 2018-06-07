@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import { API } from "aws-amplify";
-import { PageHeader, ListGroup, ListGroupItem } from "react-bootstrap";
+import { FormGroup, FormControl, ControlLabel, Col,
+  PageHeader, ListGroup, ListGroupItem } from "react-bootstrap";
 import { timeParse as parse } from 'd3-time-format';
 import {AreaChart} from 'react-easy-chart';
 import "./ListMoistureData.css";
@@ -14,15 +15,16 @@ export default class ListMoistureData extends Component {
 
     this.state = {
       isLoading: true,
+      time: "2018",
       moistData: []
     };
-    
+
     this.graphData = []
     this.chartData = []
   }
 
-  
-  
+
+
   async componentDidMount() {
   if (!this.props.isAuthenticated) {
     return;
@@ -30,19 +32,19 @@ export default class ListMoistureData extends Component {
 
   try {
     var moistData = await this.getMoistData();
-    this.setState({ moistData });    
+    this.setState({ moistData });
     var tempData =  moistData
-    
+
     var date_sort_asc = function (data1, data2) {
         var date1 = data1.Time, date2 = data2.Time;
-    
+
         if (date1 > date2) return 1;
         if (date1 < date2) return -1;
         return 0;
     };
-    
+
     tempData.sort(date_sort_asc);
-    
+
   } catch (e) {
     alert(e);
   }
@@ -50,20 +52,57 @@ export default class ListMoistureData extends Component {
   this.setState({ isLoading: false });
 }
 
+handleChange = async event => {
+
+  console.log("id: " + event.target.id);
+  console.log("value: " + event.target.value);
+  this.setState({
+    [event.target.id]: event.target.value}, this.updateMoistureData
+  )
+};
+
+
+async updateMoistureData() {
+
+  console.log("HELLO");
+
+  try {
+    var moistData = await this.getMoistData();
+    //console.log("Humidity data: " + JSON.stringify(HumidityData));
+    this.setState({ moistData });
+    var tempData =  moistData;
+
+    var date_sort_asc = function (data1, data2) {
+        var date1 = data1.Time, date2 = data2.Time;
+
+        if (date1 > date2) return 1;
+        if (date1 < date2) return -1;
+        return 0;
+    };
+
+    tempData.sort(date_sort_asc);
+
+  } catch (e) {
+    alert(e);
+  }
+
+  this.renderMoistGraph(moistData);
+}
+
 getMoistData() {
-  var data = {"MAC": "E4:7C:F9:06:3C:A4"};
+  var data = {"MAC": "E4:7C:F9:06:3C:A4", "Time":this.state.time};
   return API.post("plants","sensors/moisture", {
     body: data
   }).catch(error => {
     console.log(error.response)
-  });  
+  });
 }
 
 renderMoistGraph(data){
     if(data !== undefined) {
         this.graphData = []
         var count = data.length;
-        
+
         // const parseDate = parse('%d-%b-%y %H:%M');
         var tempData = data.slice(count-144,count);
         var dataM1 = [];
@@ -74,7 +113,7 @@ renderMoistGraph(data){
         for (i = 0; i < tempData.length; i++) {
             var tempDate = tempData[i].Time.replace("T"," ").substring(0,16)
             let date = moment(tempDate, 'YYYY-MM-DD HH:mm');
-            
+
             var subm1 = { x: date.format('D-MMM-YY HH:mm'), y: tempData[i]["Moisture_1"]}
             var subm2 = { x: date.format('D-MMM-YY HH:mm'), y: tempData[i]["Moisture_2"] }
             var subm3 = { x: date.format('D-MMM-YY HH:mm'), y: tempData[i]["Moisture_3"] }
@@ -131,6 +170,24 @@ renderMoistGraph(data){
     );
 }
 
+renderHistoricalSelect() {
+
+  return (
+    <div>
+    <FormGroup controlId="time" bsSize="small">
+      <Col componentClass={ControlLabel} sm={3}>Historical View - Select Date</Col>
+        <Col sm={9}>
+          <FormControl
+            value={this.state.date}
+            onChange={this.handleChange}
+            type="Date"
+          />
+        </Col>
+      </FormGroup>
+    </div>
+  );
+}
+
 renderMoistDataList(data) {
   if (data !== undefined) {
      var count = data.length;
@@ -140,27 +197,28 @@ renderMoistDataList(data) {
       console.log(JSON.stringify(tempData));
      for (i = 0; i < tempData.length; i++) {
         var subtime = new Date(tempData[i].Time).toLocaleString("en-US")
-         
+
         this.chartData.push({
-             Sensor: tempData[i].Sensor, 
-             userID: tempData[i].userID, 
-             Moisture_1: tempData[i].Moisture_1, 
+             Sensor: tempData[i].Sensor,
+             userID: tempData[i].userID,
+             Moisture_1: tempData[i].Moisture_1,
              Moisture_2: tempData[i].Moisture_2,
              Moisture_3: tempData[i].Moisture_3,
              Moisture_4: tempData[i].Moisture_4,
-             MAC: tempData[i].MAC, 
+             MAC: tempData[i].MAC,
              Time: subtime});
       }
   }
   return (
     <div>
-        <div>
-          {"Total Datapoints: " + count
-            + " Viewing: " + (count < 144 ? count : 144)
-          }
-        <br/>
-          {"Note: Only sensor data associated to logged in user is viewable"}
-        </div>
+    <div>
+      <b>Total Datapoints: </b>
+      { count }
+      <b> Viewing: </b>
+      {count < 144 ? count : 144}
+    <br/>
+      <b>Note: </b>{"Only sensor data associated to logged in user is viewable"}
+    </div>
         <BootstrapTable data={this.chartData} striped hover>
           <TableHeaderColumn dataField='Sensor' isKey={true} hidden={true}>Sensor</TableHeaderColumn>
           <TableHeaderColumn dataField='Time'>Time</TableHeaderColumn>
@@ -189,6 +247,7 @@ renderMoistureData() {
       <PageHeader>Your Moisture Sensor Data</PageHeader>
       <div>
         {this.renderMoistGraph(this.state.moistData)}
+        {this.renderHistoricalSelect()}
         {this.renderMoistDataList(this.state.moistData)}
       </div>
     </div>

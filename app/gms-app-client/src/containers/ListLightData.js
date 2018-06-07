@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import { API } from "aws-amplify";
-import { PageHeader, ListGroup, ListGroupItem } from "react-bootstrap";
+import { FormGroup, FormControl, ControlLabel, Col,
+  PageHeader, ListGroup, ListGroupItem } from "react-bootstrap";
 import { timeParse as parse } from 'd3-time-format';
 import {AreaChart} from 'react-easy-chart';
 import "./ListLightData.css";
@@ -14,35 +15,36 @@ export default class ListLightData extends Component {
 
     this.state = {
       isLoading: true,
-      lightdata: []
+      time: "2018",
+      LightData: []
     };
-    
+
     this.graphData = []
     this.chartData = []
   }
 
-  
-  
+
+
   async componentDidMount() {
   if (!this.props.isAuthenticated) {
     return;
   }
 
   try {
-    var lightdata = await this.getLightData();
-    this.setState({ lightdata });    
-    var tempData =  lightdata
-    
+    var LightData = await this.getLightData();
+    this.setState({ LightData });
+    var tempData =  LightData
+
     var date_sort_asc = function (data1, data2) {
         var date1 = data1.Time, date2 = data2.Time;
-    
+
         if (date1 > date2) return 1;
         if (date1 < date2) return -1;
         return 0;
     };
-    
+
     tempData.sort(date_sort_asc);
-    
+
   } catch (e) {
     alert(e);
   }
@@ -50,20 +52,59 @@ export default class ListLightData extends Component {
   this.setState({ isLoading: false });
 }
 
+handleChange = async event => {
+
+  console.log("id: " + event.target.id);
+  console.log("value: " + event.target.value);
+  this.setState({
+    [event.target.id]: event.target.value}, this.updateLightData
+  )
+};
+
+
+async updateLightData() {
+
+  console.log("HELLO");
+
+  try {
+    var LightData = await this.getLightData();
+    //console.log("Humidity data: " + JSON.stringify(HumidityData));
+    this.setState({ LightData });
+    var tempData =  LightData;
+
+    var date_sort_asc = function (data1, data2) {
+        var date1 = data1.Time, date2 = data2.Time;
+
+        if (date1 > date2) return 1;
+        if (date1 < date2) return -1;
+        return 0;
+    };
+
+    tempData.sort(date_sort_asc);
+
+  } catch (e) {
+    alert(e);
+  }
+
+  this.renderLightGraph(LightData);
+}
+
 getLightData() {
-  var data = {"MAC": "E4:7C:F9:06:3C:A4"};
+  var data = {"MAC": "E4:7C:F9:06:3C:A4", "Time":this.state.time};
   return API.post("plants","sensors/light", {
     body: data
   }).catch(error => {
     console.log(error.response)
-  });  
+  });
 }
 
 renderLightGraph(data){
+  console.log("data in renderlightgraph:" + JSON.stringify(data));
     if(data !== undefined) {
+        console.log("data not undefined")
         this.graphData = []
         var count = data.length;
-        
+
         // const parseDate = parse('%d-%b-%y %H:%M');
         var tempData = data.slice(count-144,count);
         var dataIR = [];
@@ -73,7 +114,7 @@ renderLightGraph(data){
         for (i = 0; i < tempData.length; i++) {
             var tempDate = tempData[i].Time.replace("T"," ").substring(0,16)
             let date = moment(tempDate, 'YYYY-MM-DD HH:mm');
-            
+
             var subData = { x: date.format('D-MMM-YY HH:mm'), y: tempData[i]["IR"]}
             var subfs = { x: date.format('D-MMM-YY HH:mm'), y: tempData[i]["Full_Spectrum"] }
             var subv = { x: date.format('D-MMM-YY HH:mm'), y: tempData[i]["Visible"] }
@@ -84,7 +125,8 @@ renderLightGraph(data){
         this.graphData.push(dataIR)
         this.graphData.push(dataFS)
         this.graphData.push(dataV)
-        console.log(JSON.stringify(this.graphData));
+
+        //console.log("renderLightGraph this.graphdata: " JSON.stringify(this.graphData));
     }
 
 //return HTML of what I want to display
@@ -126,6 +168,24 @@ renderLightGraph(data){
     );
 }
 
+renderHistoricalSelect() {
+
+  return (
+    <div>
+    <FormGroup controlId="time" bsSize="small">
+      <Col componentClass={ControlLabel} sm={3}>Historical View - Select Date</Col>
+        <Col sm={9}>
+          <FormControl
+            value={this.state.date}
+            onChange={this.handleChange}
+            type="Date"
+          />
+        </Col>
+      </FormGroup>
+    </div>
+  );
+}
+
 renderLightDataList(data) {
   if (data !== undefined) {
      var count = data.length;
@@ -135,26 +195,27 @@ renderLightDataList(data) {
       //console.log(JSON.stringify(tempData));
      for (i = 0; i < tempData.length; i++) {
          var subtime = new Date(tempData[i].Time).toLocaleString("en-US")
-         
+
         this.chartData.push({
-             Sensor: tempData[i].Sensor, 
-             userID: tempData[i].userID, 
-             Visible: tempData[i].Visible, 
-             IR: tempData[i].IR, 
-             Full_Spectrum: tempData[i].Full_Spectrum, 
-             MAC: tempData[i].MAC, 
+             Sensor: tempData[i].Sensor,
+             userID: tempData[i].userID,
+             Visible: tempData[i].Visible,
+             IR: tempData[i].IR,
+             Full_Spectrum: tempData[i].Full_Spectrum,
+             MAC: tempData[i].MAC,
              Time: subtime});
       }
   }
   return (
     <div>
-        <div>
-          {"Total Datapoints: " + count
-            + " Viewing: " + (count < 144 ? count : 144)
-          }
-        <br/>
-          {"Note: Only sensor data associated to logged in user is viewable"}
-        </div>
+    <div>
+      <b>Total Datapoints: </b>
+      { count }
+      <b> Viewing: </b>
+      {count < 144 ? count : 144}
+    <br/>
+      <b>Note: </b>{"Only sensor data associated to logged in user is viewable"}
+    </div>
         <BootstrapTable data={this.chartData} striped hover>
           <TableHeaderColumn dataField='Sensor' isKey={true} hidden={true}>Sensor</TableHeaderColumn>
           <TableHeaderColumn dataField='Time'>Time</TableHeaderColumn>
@@ -181,8 +242,9 @@ renderLightData() {
     <div className="LightData">
       <PageHeader>Your Light Sensor Data</PageHeader>
       <div>
-        {this.renderLightGraph(this.state.lightdata)}
-        {this.renderLightDataList(this.state.lightdata)}
+        {this.renderLightGraph(this.state.LightData)}
+        {this.renderHistoricalSelect()}
+        {this.renderLightDataList(this.state.LightData)}
       </div>
     </div>
   );

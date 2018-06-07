@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import { API } from "aws-amplify";
-import { PageHeader, ListGroup, ListGroupItem } from "react-bootstrap";
+import { FormGroup, FormControl, ControlLabel, Col,
+  PageHeader, ListGroup, ListGroupItem } from "react-bootstrap";
 import { timeParse as parse } from 'd3-time-format';
 import {AreaChart} from 'react-easy-chart';
 import "./ListTemperatureData.css";
@@ -14,6 +15,7 @@ export default class ListTemperatureData extends Component {
 
     this.state = {
       isLoading: true,
+      time: "2018",
       TemperatureData: []
     };
 
@@ -50,8 +52,43 @@ export default class ListTemperatureData extends Component {
   this.setState({ isLoading: false });
 }
 
+handleChange = async event => {
+
+  console.log("id: " + event.target.id);
+  console.log("value: " + event.target.value);
+  this.setState({
+    [event.target.id]: event.target.value}, this.updateTemperatureData
+  )
+};
+
+async updateTemperatureData() {
+  console.log("HELLO");
+
+    try {
+      var TemperatureData = await this.getTemperatureData();
+      //console.log("Humidity data: " + JSON.stringify(HumidityData));
+      this.setState({ TemperatureData });
+      var tempData =  TemperatureData;
+
+      var date_sort_asc = function (data1, data2) {
+          var date1 = data1.Time, date2 = data2.Time;
+
+          if (date1 > date2) return 1;
+          if (date1 < date2) return -1;
+          return 0;
+      };
+
+      tempData.sort(date_sort_asc);
+
+    } catch (e) {
+      alert(e);
+    }
+
+    this.renderTemperatureGraph(TemperatureData);
+}
+
 getTemperatureData() {
-  var data = {"MAC": "E4:7C:F9:06:3C:A4"};
+  var data = {"MAC": "E4:7C:F9:06:3C:A4", "Time":this.state.time};
   return API.post("plants","sensors/temperature", {
     body: data
   }).catch(error => {
@@ -117,6 +154,24 @@ renderTemperatureGraph(data){
     );
 }
 
+renderHistoricalSelect() {
+
+  return (
+    <div>
+    <FormGroup controlId="time" bsSize="small">
+      <Col componentClass={ControlLabel} sm={3}>Historical View - Select Date</Col>
+        <Col sm={9}>
+          <FormControl
+            value={this.state.date}
+            onChange={this.handleChange}
+            type="Date"
+          />
+        </Col>
+      </FormGroup>
+    </div>
+  );
+}
+
 renderTemperatureDataList(data) {
   if (data !== undefined) {
      var count = data.length;
@@ -138,13 +193,14 @@ renderTemperatureDataList(data) {
   }
   return (
     <div>
-        <div>
-          {"Total Datapoints: " + count
-            + " Viewing: " + (count < 144 ? count : 144)
-          }
-        <br/>
-          {"Note: Only sensor data associated to logged in user is viewable"}
-        </div>
+    <div>
+      <b>Total Datapoints: </b>
+      { count }
+      <b> Viewing: </b>
+      {count < 144 ? count : 144}
+    <br/>
+      <b>Note: </b>{"Only sensor data associated to logged in user is viewable"}
+    </div>
         <BootstrapTable data={this.chartData} striped hover>
           <TableHeaderColumn dataField='Sensor' isKey={true} hidden={true}>Sensor</TableHeaderColumn>
           <TableHeaderColumn dataField='Time'>Time</TableHeaderColumn>
@@ -171,6 +227,7 @@ renderTemperatureData() {
       <PageHeader>Your Temperature Sensor Data</PageHeader>
       <div>
         {this.renderTemperatureGraph(this.state.TemperatureData)}
+        {this.renderHistoricalSelect()}
         {this.renderTemperatureDataList(this.state.TemperatureData)}
       </div>
     </div>
