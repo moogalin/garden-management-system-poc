@@ -54,8 +54,8 @@ export default class ListLightData extends Component {
 
 handleChange = async event => {
 
-  console.log("id: " + event.target.id);
-  console.log("value: " + event.target.value);
+  //console.log("change id: " + event.target.id);
+  //console.log("change value: " + event.target.value);
   this.setState({
     [event.target.id]: event.target.value}, this.updateLightData
   )
@@ -64,11 +64,9 @@ handleChange = async event => {
 
 async updateLightData() {
 
-  console.log("HELLO");
-
   try {
     var LightData = await this.getLightData();
-    //console.log("Humidity data: " + JSON.stringify(HumidityData));
+
     this.setState({ LightData });
     var tempData =  LightData;
 
@@ -99,9 +97,7 @@ getLightData() {
 }
 
 renderLightGraph(data){
-  console.log("data in renderlightgraph:" + JSON.stringify(data));
     if(data !== undefined) {
-        console.log("data not undefined")
         this.graphData = []
         var count = data.length;
 
@@ -126,7 +122,6 @@ renderLightGraph(data){
         this.graphData.push(dataFS)
         this.graphData.push(dataV)
 
-        //console.log("renderLightGraph this.graphdata: " JSON.stringify(this.graphData));
     }
 
 //return HTML of what I want to display
@@ -191,8 +186,7 @@ renderLightDataList(data) {
      var count = data.length;
     this.chartData = []
     var tempData = data.slice(count-144,count);
-    var i
-      //console.log(JSON.stringify(tempData));
+    var i;
      for (i = 0; i < tempData.length; i++) {
          var subtime = new Date(tempData[i].Time).toLocaleString("en-US")
 
