@@ -80,6 +80,8 @@ export default class Login extends Component {
   }
 
   handleChange = event => {
+    console.log("target: " + event.target.id);
+    console.log("value: " + event.target.value);
     this.setState({
       [event.target.id]: event.target.value
     });
@@ -90,6 +92,9 @@ export default class Login extends Component {
 
     this.setState({ isLoading: true });
 
+    console.log("MAC: " + this.state.claimed_mac);
+    console.log("MACS: " + this.state.claimed_macs);
+
     try {
       await this.updateProfile({
         fname: this.state.fname,
@@ -98,6 +103,14 @@ export default class Login extends Component {
         zip: Number(this.state.zip),
         about: this.state.about
       });
+      await this.updateClaimedPis({
+        MAC: this.state.claim_mac
+      });
+
+      const claimed_macs= await this.getClaimedMACs();
+      this.setState({ claimed_macs });
+      console.log("Claimed MACS: " + JSON.stringify(claimed_macs));
+
       this.setState({ isLoading: false });
       console.log("Email: " + this.state.email);
       alert("Sucess! Profile updated");
@@ -110,6 +123,14 @@ export default class Login extends Component {
 
   updateProfile(data) {
     return API.put("plants", "user/id", {
+      body: data
+    }).catch(error => {
+      console.log(error.response)
+    });
+  }
+
+  updateClaimedPis(data) {
+    return API.post("plants", "pis/claimed", {
       body: data
     }).catch(error => {
       console.log(error.response)
