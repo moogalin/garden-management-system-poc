@@ -196,3 +196,15 @@ functions:
             method: get
             cors: true
             authorizer: aws_iam
+
+  # Defines an HTTP API endpoint that calls the main function in addclaimedpis.js
+  # - path: url path is /pis/claimed
+  # - method: POST request
+  addclaimedpi:
+      handler: addclaimedpi.main
+      events:
+        - http:
+            path: pis/claimed
+            method: post
+            cors: true
+            authorizer: aws_iam

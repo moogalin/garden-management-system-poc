@@ -54,8 +54,8 @@ export default class ListMoistureData extends Component {
 
 handleChange = async event => {
 
-  console.log("id: " + event.target.id);
-  console.log("value: " + event.target.value);
+  //console.log("change id: " + event.target.id);
+  //console.log("change value: " + event.target.value);
   this.setState({
     [event.target.id]: event.target.value}, this.updateMoistureData
   )
@@ -63,12 +63,9 @@ handleChange = async event => {
 
 
 async updateMoistureData() {
-
-  console.log("HELLO");
-
+  
   try {
     var moistData = await this.getMoistData();
-    //console.log("Humidity data: " + JSON.stringify(HumidityData));
     this.setState({ moistData });
     var tempData =  moistData;
 
@@ -127,7 +124,6 @@ renderMoistGraph(data){
         this.graphData.push(dataM2)
         this.graphData.push(dataM3)
         this.graphData.push(dataM4)
-        console.log(JSON.stringify(this.graphData));
     }
 
 //return HTML of what I want to display
@@ -193,8 +189,7 @@ renderMoistDataList(data) {
      var count = data.length;
     this.chartData = []
     var tempData = data.slice(count-144,count);
-    var i
-      console.log(JSON.stringify(tempData));
+    var i;
      for (i = 0; i < tempData.length; i++) {
         var subtime = new Date(tempData[i].Time).toLocaleString("en-US")
 

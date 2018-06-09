@@ -54,8 +54,8 @@ export default class ListHumidityData extends Component {
 
 handleChange = async event => {
 
-  console.log("id: " + event.target.id);
-  console.log("value: " + event.target.value);
+  //console.log("change id: " + event.target.id);
+  //console.log("change value: " + event.target.value);
   this.setState({
     [event.target.id]: event.target.value}, this.updateHumidityData
   )
@@ -64,11 +64,8 @@ handleChange = async event => {
 
 async updateHumidityData() {
 
-  console.log("HELLO");
-
   try {
     var HumidityData = await this.getHumidityData();
-    //console.log("Humidity data: " + JSON.stringify(HumidityData));
     this.setState({ HumidityData });
     var tempData =  HumidityData;
 
@@ -90,8 +87,6 @@ async updateHumidityData() {
 }
 
 getHumidityData() {
-  console.log("Gettings Humidity data");
-  console.log("Time: " + this.state.time);
   var data = {"MAC": "E4:7C:F9:06:3C:A4", "Time":this.state.time};
   return API.post("plants","sensors/humidity", {
     body: data
@@ -117,7 +112,6 @@ renderHumidityGraph(data){
             dataH.push(subh)
         }
         this.graphData.push(dataH)
-        //console.log(JSON.stringify(this.graphData));
     }
 
 //return HTML of what I want to display
@@ -174,8 +168,7 @@ renderHumidityDataList(data) {
      var count = data.length;
     this.chartData = []
     var tempData = data.slice(count-144,count);
-    var i
-      //console.log(JSON.stringify(tempData));
+    var i;
      for (i = 0; i < tempData.length; i++) {
          var subtime = new Date(tempData[i].Time).toLocaleString("en-US")
 
