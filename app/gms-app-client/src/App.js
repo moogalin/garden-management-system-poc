@@ -84,6 +84,9 @@ class App extends Component {
                 </LinkContainer>
                 <LinkContainer to="/currentweather">
                   <MenuItem>Current Weather</MenuItem>
+                  </LinkContainer>
+                <LinkContainer to="/forecast">
+                  <MenuItem>Weather Forecast</MenuItem>
                 </LinkContainer>
                 <LinkContainer to="/profile">
                   <MenuItem>User Profile</MenuItem>
